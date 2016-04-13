@@ -129,6 +129,10 @@ BOARD_USE_VP8ENC_SUPPORT := true
 # Include path
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
+# Init
+TARGET_INIT_VENDOR_LIB := libinit_sec
+TARGET_UNIFIED_DEVICE := true
+
 # Hardware
 BOARD_HARDWARE_CLASS += device/samsung/j7eltexx/cmhw
 
