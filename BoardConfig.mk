@@ -167,10 +167,13 @@ BACKLIGHT_PATH := "/sys/class/backlight/panel/brightness"
 CHARGING_ENABLED_PATH := /sys/class/power_supply/battery/batt_lp_charging
 
 # RIL
+SIM_COUNT := 2
 BOARD_VENDOR := samsung
 BOARD_MODEM_TYPE := tss310
 BOARD_PROVIDES_LIBRIL := true
 TARGET_IGNORE_RO_BOOT_REVISION := true
+TARGET_GLOBAL_CFLAGS += -DANDROID_MULTI_SIM
+TARGET_GLOBAL_CPPFLAGS += -DANDROID_MULTI_SIM
 
 # RIL.java overwrite
 BOARD_RIL_CLASS := ../../../$(LOCAL_PATH)/ril
