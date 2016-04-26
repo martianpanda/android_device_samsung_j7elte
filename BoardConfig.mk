@@ -97,9 +97,6 @@ BOARD_OVERRIDE_RS_CPU_VARIANT_32 := cortex-a53
 # less). Use 3 to avoid timing issues.
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 
-# Exynos display
-BOARD_USES_VIRTUAL_DISPLAY := true
-
 # HWCServices
 BOARD_USES_HWC_SERVICES := true
 
