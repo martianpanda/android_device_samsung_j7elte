@@ -180,7 +180,7 @@ TARGET_GLOBAL_CPPFLAGS += -DANDROID_MULTI_SIM
 BOARD_RIL_CLASS := ../../../$(LOCAL_PATH)/ril
 
 # Recovery
-TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/fstab.samsungexynos7580
+TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/etc/fstab.samsungexynos7580
 
 # SELinux
 BOARD_SEPOLICY_DIRS := \
