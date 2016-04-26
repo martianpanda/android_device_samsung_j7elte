@@ -1,19 +1,34 @@
-DEVICE_PACKAGE_OVERLAYS += device/samsung/trelte-common/overlay
+#
+# Copyright (C) 2016 The CyanogenMod Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
-LOCAL_PATH := device/samsung/trelte-common
+DEVICE_PACKAGE_OVERLAYS += device/samsung/j7eltexx/overlay
+
+LOCAL_PATH := device/samsung/j7eltexx
 
 ###########################################################
 ### RAMDISK
 ###########################################################
 
 PRODUCT_PACKAGES += \
-    fstab.universal5433 \
-    init.power.rc \
-    init.samsung.rc \
-    init.universal5433.rc \
-    init.universal5433.usb.rc \
-    init.universal5433.wifi.rc \
-    ueventd.universal5433.rc
+    fstab.samsungexynos7580 \
+    init.wifi.rc \
+    init.baseband.rc \
+    init.samsungexynos7580.rc \
+    init.samsungexynos7580.usb.rc \
+    ueventd.samsungexynos7580.rc
 
 ###########################################################
 ### PERMISSONS
@@ -24,28 +39,15 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
-    frameworks/native/data/etc/android.hardware.consumerir.xml:system/etc/permissions/android.hardware.consumerir.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
-    frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml \
-    frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
     frameworks/native/data/etc/android.hardware.sensor.accelerometer.xml:system/etc/permissions/android.hardware.sensor.accelerometer.xml \
-    frameworks/native/data/etc/android.hardware.sensor.barometer.xml:system/etc/permissions/android.hardware.sensor.barometer.xml \
-    frameworks/native/data/etc/android.hardware.sensor.compass.xml:system/etc/permissions/android.hardware.sensor.compass.xml \
-    frameworks/native/data/etc/android.hardware.sensor.gyroscope.xml:system/etc/permissions/android.hardware.sensor.gyroscope.xml \
-    frameworks/native/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
     frameworks/native/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
-    frameworks/native/data/etc/android.hardware.sensor.stepcounter.xml:system/etc/permissions/android.hardware.sensor.stepcounter.xml \
-    frameworks/native/data/etc/android.hardware.sensor.stepdetector.xml:system/etc/permissions/android.hardware.sensor.stepdetector.xml \
     frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
     frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml \
     frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
     frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
     frameworks/native/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
     frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
-    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
-    frameworks/native/data/etc/android.software.sip.xml:system/etc/permissions/android.software.sip.xml \
-    frameworks/native/data/etc/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml \
-    frameworks/native/data/etc/com.nxp.mifare.xml:system/etc/permissions/com.nxp.mifare.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
 
 ###########################################################
@@ -53,20 +55,18 @@ PRODUCT_COPY_FILES += \
 ###########################################################
 
 PRODUCT_AAPT_CONFIG := normal
-PRODUCT_AAPT_PREF_CONFIG := 560dpi
-PRODUCT_AAPT_PREBUILT_DPI := xxxhdpi xxhdpi xhdpi hdpi
+PRODUCT_AAPT_PREF_CONFIG := 360dpi
+PRODUCT_AAPT_PREBUILT_DPI := xhdpi hdpi
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.opengles.version=196609 \
-    ro.sf.lcd_density=560 \
-    ro.bq.gpu_to_cpu_unsupported=1
+    ro.opengles.version=196608 \
+    ro.sf.lcd_density=320
 
 PRODUCT_PACKAGES += \
     gralloc.exynos5
 
 PRODUCT_PACKAGES += \
-    libion \
-    libfimg
+    libion
 
 PRODUCT_PACKAGES += \
     libstlport
@@ -87,6 +87,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     rild.libargs=-d /dev/ttyS0 \
     rild.libpath=/system/lib/libsec-ril.so \
+    rild.libpath2=/system/lib/libsec-ril-dsds.so \
     ro.ril.hsxpa=1 \
     ro.ril.gprsclass=10 \
     ro.telephony.ril_class=SlteRIL \
@@ -116,23 +117,6 @@ PRODUCT_PACKAGES += \
     wpa_supplicant.conf
 
 ###########################################################
-### NFC
-###########################################################
-
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/nfc/libnfc-sec-hal.conf:system/etc/libnfc-sec-hal.conf \
-    $(LOCAL_PATH)/configs/nfc/libnfc-sec.conf:system/etc/libnfc-brcm.conf \
-    $(LOCAL_PATH)/configs/nfc/nfcee_access.xml:system/etc/nfcee_access.xml
-
-PRODUCT_PACKAGES += \
-    com.android.nfc_extras \
-    NfcNci \
-    Tag
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.nfc.sec_hal=true
-
-###########################################################
 ### AUDIO
 ###########################################################
 
@@ -144,7 +128,7 @@ PRODUCT_PACKAGES += \
     audio.a2dp.default \
     audio.usb.default \
     audio.r_submix.default \
-    audio.primary.universal5433
+    audio.primary.universal7580
 
 PRODUCT_PROPERTY_OVERRIDES += \
     af.fast_track_multiplier=1 \
@@ -166,14 +150,14 @@ PRODUCT_COPY_FILES += \
 ###########################################################
 
 PRODUCT_PACKAGES += \
-    power.universal5433
+    power.universal7580
 
 ###########################################################
 ### LIGHTS
 ###########################################################
 
 PRODUCT_PACKAGES += \
-    lights.universal5433
+    lights.universal7580
 
 ###########################################################
 ### GPS
@@ -191,9 +175,6 @@ PRODUCT_PACKAGES += \
 ###########################################################
 
 PRODUCT_PACKAGES += \
-    camera.universal5433
-
-PRODUCT_PACKAGES += \
     Snap
 
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -204,7 +185,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 ###########################################################
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/keylayout/gpio_keys_8.kl:/system/usr/keylayout/gpio_keys_8.kl \
     $(LOCAL_PATH)/configs/keylayout/sec_touchkey.kl:/system/usr/keylayout/sec_touchkey.kl
 
 ###########################################################
@@ -212,8 +192,7 @@ PRODUCT_COPY_FILES += \
 ###########################################################
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/idc/ft5x06_ts.idc:/system/usr/idc/ft5x06_ts.idc \
-    $(LOCAL_PATH)/configs/idc/sec_e-pen.idc:/system/usr/idc/sec_e-pen.idc
+    $(LOCAL_PATH)/configs/idc/Synaptics_HID_TouchPad.idc:system/usr/idc/Synaptics_HID_TouchPad.idc
 
 ###########################################################
 ### CHARGER
@@ -237,13 +216,6 @@ PRODUCT_PACKAGES += \
     libsamsung_symbols
 
 ###########################################################
-### DEFAULT PROPS
-###########################################################
-
-ADDITIONAL_DEFAULT_PROPERTIES += \
-    ro.debug_level=0x4948
-
-###########################################################
 ### DALVIK/ART
 ###########################################################
 
@@ -252,32 +224,15 @@ ADDITIONAL_DEFAULT_PROPERTIES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.heapstartsize=8m \
-    dalvik.vm.heapgrowthlimit=256m \
+    dalvik.vm.heapgrowthlimit=128m \
     dalvik.vm.heapsize=512m \
     dalvik.vm.heaptargetutilization=0.75 \
     dalvik.vm.heapminfree=2m \
     dalvik.vm.heapmaxfree=8m
 
-###########################################################
-### HWUI
-###########################################################
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.hwui.texture_cache_size=88 \
-    ro.hwui.layer_cache_size=58 \
-    ro.hwui.path_cache_size=32 \
-    ro.hwui.shape_cache_size=4 \
-    ro.hwui.gradient_cache_size=2 \
-    ro.hwui.drop_shadow_cache_size=8 \
-    ro.hwui.r_buffer_cache_size=8 \
-    ro.hwui.text_small_cache_width=2048 \
-    ro.hwui.text_small_cache_height=2048 \
-    ro.hwui.text_large_cache_width=4096 \
-    ro.hwui.text_large_cache_height=4096
-
 # call Samsung LSI board support package
 $(call inherit-product, hardware/samsung_slsi-cm/exynos5/exynos5.mk)
-$(call inherit-product, hardware/samsung_slsi-cm/exynos5433/exynos5433.mk)
+$(call inherit-product, hardware/samsung_slsi-cm/exynos7580/exynos7580.mk)
 
-# call the proprietary setup
-$(call inherit-product-if-exists, vendor/samsung/trelte-common/trelte-common-vendor.mk)
+# Get non-open-source specific aspects
+$(call inherit-product-if-exists, vendor/samsung/j7eltexx/j7eltexx-vendor.mk)

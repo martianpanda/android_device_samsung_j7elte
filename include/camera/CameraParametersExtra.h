@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The CyanogenMod Project
+ * Copyright (C) 2016 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,16 +25,10 @@
     const char CameraParameters::EFFECT_WASHED[] = "washed"; \
     const char CameraParameters::ISO_AUTO[] = "auto"; \
     const char CameraParameters::ISO_NIGHT[] = "night"; \
-    const char CameraParameters::ISO_SPORTS[] = "sports"; \
-    const char CameraParameters::ISO_6400[] = "6400"; \
-    const char CameraParameters::ISO_3200[] = "3200"; \
-    const char CameraParameters::ISO_1600[] = "1600"; \
     const char CameraParameters::ISO_800[] = "800"; \
     const char CameraParameters::ISO_400[] = "400"; \
     const char CameraParameters::ISO_200[] = "200"; \
     const char CameraParameters::ISO_100[] = "100"; \
-    const char CameraParameters::ISO_80[] = "80"; \
-    const char CameraParameters::ISO_50[] = "50"; \
     const char CameraParameters::KEY_SUPPORTED_METERING_MODE[] = "metering-values"; \
     const char CameraParameters::METERING_CENTER[] = "center"; \
     const char CameraParameters::METERING_MATRIX[] = "matrix"; \
@@ -57,16 +51,10 @@
     static const char EFFECT_WASHED[]; \
     static const char ISO_AUTO[]; \
     static const char ISO_NIGHT[]; \
-    static const char ISO_SPORTS[]; \
-    static const char ISO_6400[]; \
-    static const char ISO_3200[]; \
-    static const char ISO_1600[]; \
     static const char ISO_800[]; \
     static const char ISO_400[]; \
     static const char ISO_200[]; \
     static const char ISO_100[]; \
-    static const char ISO_80[]; \
-    static const char ISO_50[]; \
     static const char KEY_SUPPORTED_METERING_MODE[]; \
     static const char METERING_CENTER[]; \
     static const char METERING_MATRIX[]; \

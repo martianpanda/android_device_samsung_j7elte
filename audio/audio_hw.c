@@ -55,9 +55,9 @@
 #define PCM_TOTAL 2
 
 #define PCM_DEVICE 0       /* Playback link */
-#define PCM_DEVICE_VOICE 1 /* Baseband link */
-#define PCM_DEVICE_SCO 2   /* Bluetooth link */
-#define PCM_DEVICE_DEEP 3  /* Deep buffer */
+#define PCM_DEVICE_VOICE 2 /* Baseband link */
+#define PCM_DEVICE_SCO 3   /* Bluetooth link */
+#define PCM_DEVICE_DEEP 1  /* Deep buffer */
 
 #define MIXER_CARD 0
 
@@ -139,14 +139,6 @@ struct pcm_config pcm_config_sco = {
     .format = PCM_FORMAT_S16_LE,
 };
 
-struct pcm_config pcm_config_sco_wide = {
-    .channels = 1,
-    .rate = 16000,
-    .period_size = SCO_CAPTURE_PERIOD_SIZE,
-    .period_count = SCO_CAPTURE_PERIOD_COUNT,
-    .format = PCM_FORMAT_S16_LE,
-};
-
 struct pcm_config pcm_config_voice = {
     .channels = 2,
     .rate = 8000,
@@ -190,9 +182,6 @@ struct audio_device {
     int cur_route_id;     /* current route ID: combination of input source
                            * and output device IDs */
     audio_mode_t mode;
-
-    const char *active_output_device;
-    const char *active_input_device;
 
     /* Call audio */
     struct pcm *pcm_voice_rx;
@@ -363,19 +352,11 @@ static int adev_set_voice_volume(struct audio_hw_device *dev, float volume);
 
 static int open_hdmi_driver(struct audio_device *adev)
 {
-    char *hdmi_node;
-
-#ifndef USES_NEW_HDMI
-    hdmi_node = "/dev/video16";
-#else
-    hdmi_node = "/dev/graphics/fb1";
-#endif
-
     if (adev->hdmi_drv_fd < 0) {
-        adev->hdmi_drv_fd = open(hdmi_node, O_RDWR);
+        adev->hdmi_drv_fd = open("/dev/video16", O_RDWR);
         if (adev->hdmi_drv_fd < 0)
-            ALOGE("%s cannot open %s - error: %s\n",
-                  __func__, hdmi_node, strerror(errno));
+            ALOGE("%s cannot open video16 - error: %s\n",
+                  __func__, strerror(errno));
     }
     return adev->hdmi_drv_fd;
 }
@@ -463,9 +444,7 @@ static void select_devices(struct audio_device *adev)
     int output_device_id = get_output_device_id(adev->out_device);
     int input_source_id = get_input_source_id(adev->input_source, adev->wb_amr);
     const char *output_route = NULL;
-    const char *output_device = NULL;
     const char *input_route = NULL;
-    const char *input_device = NULL;
     char current_device[64] = {0};
     int new_route_id;
 
@@ -484,12 +463,8 @@ static void select_devices(struct audio_device *adev)
         if (output_device_id != OUT_DEVICE_NONE) {
             input_route =
             route_configs[input_source_id][output_device_id]->input_route;
-            input_device =
-            route_configs[input_source_id][output_device_id]->input_device;
             output_route =
             route_configs[input_source_id][output_device_id]->output_route;
-            output_device =
-            route_configs[input_source_id][output_device_id]->output_device;
         } else {
             switch (adev->in_device) {
                 case AUDIO_DEVICE_IN_WIRED_HEADSET & ~AUDIO_DEVICE_BIT_IN:
@@ -509,15 +484,11 @@ static void select_devices(struct audio_device *adev)
 
             input_route =
             (route_configs[input_source_id][output_device_id])->input_route;
-            input_device =
-            (route_configs[input_source_id][output_device_id])->input_device;
         }
     } else {
         if (output_device_id != OUT_DEVICE_NONE) {
             output_route =
             (route_configs[IN_SOURCE_MIC][output_device_id])->output_route;
-            output_device =
-            (route_configs[IN_SOURCE_MIC][output_device_id])->output_device;
         }
     }
 
@@ -529,43 +500,10 @@ static void select_devices(struct audio_device *adev)
           input_route ? input_route : "none");
 
     /*
-     * The Arizona driver documentation describes firmware loading this way:
-     *
-     * To load a firmware, or to reboot the ADSP with different firmware you
-     * must:
-     * - Disconnect the ADSP from any active audio path so that it will be
-     *   powered-down
-     * - Set the firmware control to the firmware you want to load
-     * - Connect the ADSP to an active audio path so it will be powered-up
-     */
-    
-    /*
-     * Disable the output and input device
-     */
-    if (adev->active_output_device != NULL) {
-        snprintf(current_device,
-                 sizeof(current_device),
-                 "%s-disable",
-                 adev->active_output_device);
-        audio_route_apply_path(adev->ar, current_device);
-    }
-    
-    if (adev->active_input_device != NULL) {
-        snprintf(current_device,
-                 sizeof(current_device),
-                 "%s-disable",
-                 adev->active_input_device);
-        audio_route_apply_path(adev->ar, current_device);
-    }
-    audio_route_update_mixer(adev->ar);
-
-    /*
      * Reset the audio routes to deactivate active audio paths
      */
     audio_route_reset(adev->ar);
     audio_route_update_mixer(adev->ar);
-
-    usleep(50);
 
     /*
      * Apply the new audio routes and set volumes
@@ -575,34 +513,6 @@ static void select_devices(struct audio_device *adev)
     }
     if (input_route != NULL) {
         audio_route_apply_path(adev->ar, input_route);
-    }
-    audio_route_update_mixer(adev->ar);
-    
-    usleep(50);
-    
-    /*
-     * Turn on the devices
-     */
-    if (output_device != NULL) {
-        snprintf(current_device,
-                 sizeof(current_device),
-                 "%s-enable",
-                 output_device);
-        audio_route_apply_path(adev->ar, current_device);
-        adev->active_output_device = output_device;
-    } else {
-        adev->active_output_device = NULL;
-    }
-    
-    if (input_device != NULL) {
-        snprintf(current_device,
-                 sizeof(current_device),
-                 "%s-enable",
-                 input_device);
-        audio_route_apply_path(adev->ar, current_device);
-        adev->active_input_device = input_device;
-    } else {
-        adev->active_input_device = NULL;
     }
     audio_route_update_mixer(adev->ar);
 }
@@ -629,8 +539,6 @@ static void force_non_hdmi_out_standby(struct audio_device *adev)
 /* must be called with the hw device mutex locked, OK to hold other mutexes */
 static void start_bt_sco(struct audio_device *adev)
 {
-    struct pcm_config *sco_config;
-
     if (adev->pcm_sco_rx != NULL || adev->pcm_sco_tx != NULL) {
         ALOGW("%s: SCO PCMs already open!\n", __func__);
         return;
@@ -638,16 +546,10 @@ static void start_bt_sco(struct audio_device *adev)
 
     ALOGV("%s: Opening SCO PCMs", __func__);
 
-    if (adev->wb_amr) {
-        sco_config = &pcm_config_sco_wide;
-    } else {
-        sco_config = &pcm_config_sco;
-    }
-
     adev->pcm_sco_rx = pcm_open(PCM_CARD,
                                 PCM_DEVICE_SCO,
                                 PCM_OUT | PCM_MONOTONIC,
-                                sco_config);
+                                &pcm_config_sco);
     if (adev->pcm_sco_rx != NULL && !pcm_is_ready(adev->pcm_sco_rx)) {
         ALOGE("%s: cannot open PCM SCO RX stream: %s",
               __func__, pcm_get_error(adev->pcm_sco_rx));
@@ -657,7 +559,7 @@ static void start_bt_sco(struct audio_device *adev)
     adev->pcm_sco_tx = pcm_open(PCM_CARD,
                                 PCM_DEVICE_SCO,
                                 PCM_IN,
-                                sco_config);
+                                &pcm_config_sco);
     if (adev->pcm_sco_tx && !pcm_is_ready(adev->pcm_sco_tx)) {
         ALOGE("%s: cannot open PCM SCO TX stream: %s",
               __func__, pcm_get_error(adev->pcm_sco_tx));
