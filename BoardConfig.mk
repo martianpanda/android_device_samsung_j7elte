@@ -116,10 +116,6 @@ BOARD_USES_TRUST_KEYMASTER := true
 # Samsung LSI OpenMAX
 COMMON_GLOBAL_CFLAGS += -DUSE_NATIVE_SEC_NV12TILED
 
-# Samsung Seiren audio
-BOARD_USE_ALP_AUDIO := true
-BOARD_USE_SEIREN_AUDIO := true
-
 # Samsung OpenMAX Video
 BOARD_USE_STOREMETADATA := true
 BOARD_USE_METADATABUFFERTYPE := true
@@ -158,9 +154,6 @@ WIFI_DRIVER_FW_PATH_AP           := "/system/etc/wifi/bcmdhd_apsta.bin"
 
 # Webkit
 ENABLE_WEBGL := true
-
-# WFD
-BOARD_USES_WFD := true
 
 # Wifi Macloader
 BOARD_HAVE_SAMSUNG_WIFI := true
