@@ -58,10 +58,6 @@ PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := 360dpi
 PRODUCT_AAPT_PREBUILT_DPI := xhdpi hdpi
 
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.opengles.version=196608 \
-    ro.sf.lcd_density=320
-
 PRODUCT_PACKAGES += \
     gralloc.exynos5
 
@@ -83,15 +79,6 @@ PRODUCT_PACKAGES += \
     libsecril-client \
     libsecril-client-sap \
     modemloader
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    rild.libargs=-d /dev/ttyS0 \
-    rild.libpath=/system/lib/libsec-ril.so \
-    rild.libpath2=/system/lib/libsec-ril-dsds.so \
-    ro.ril.hsxpa=1 \
-    ro.ril.gprsclass=10 \
-    ro.telephony.ril_class=SlteRIL \
-    ro.ril.telephony.mqanelements=5
 
 ###########################################################
 ### WIFI
@@ -129,10 +116,6 @@ PRODUCT_PACKAGES += \
     audio.usb.default \
     audio.r_submix.default \
     audio.primary.universal7580
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    af.fast_track_multiplier=1 \
-    audio_hal.force_voice_config=wide
 
 ###########################################################
 ### OMX/MEDIA
@@ -176,9 +159,6 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     Snap
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    camera2.portability.force_api=1
 
 ###########################################################
 ### TOUCHSCREEN
